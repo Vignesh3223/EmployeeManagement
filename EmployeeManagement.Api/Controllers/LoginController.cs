@@ -66,7 +66,7 @@ namespace EmployeeManagement.Api.Controllers
 
             var userRole = "no role";
 
-            if (username == "Administartor")
+            if (username == "Administrator")
             {
                 userRole = "Admin";
             }

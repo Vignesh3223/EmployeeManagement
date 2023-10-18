@@ -1,4 +1,5 @@
-﻿using EmployeeManagement.Business.Models;
+﻿using EmployeeManagement.Business;
+using EmployeeManagement.Persistence.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,26 +12,25 @@ namespace EmployeeManagement.Api.Controllers
     [ApiController]
     public class EmployeeManagerController : ControllerBase
     {
-        private readonly IRepository<EmployeeMaster> _employeeMasterRepository;
+        private readonly EmployeeManager _employeeManager;
 
-        public EmployeeManagerController(IRepository<EmployeeMaster> employeeMasterRepository) 
+        public EmployeeManagerController(EmployeeManager employeeManager)
         {
-            _employeeMasterRepository = employeeMasterRepository;
+            _employeeManager = employeeManager;
         }
 
         [HttpGet]
         [Authorize]
         public IActionResult GetEmployees()
         {
-            var response = _employeeMasterRepository.GetAll();
+            var response = _employeeManager.GetEmployees();
             return Ok(response);
-
         }
 
         [HttpGet]
         public IActionResult GetEmployeeById(int Id)
         {
-            var response = _employeeMasterRepository.GetById(Id);
+            var response = _employeeManager.GetEmployeeById(Id);
             return Ok(response);
         }
 
@@ -38,7 +38,7 @@ namespace EmployeeManagement.Api.Controllers
         [Authorize]
         public IActionResult CreateEmployee(EmployeeMaster employee)
         {
-            _employeeMasterRepository.Add(employee);
+            _employeeManager.CreateEmployee(employee);
             var response = new Success
             {
                 Status = "Success",
@@ -52,7 +52,7 @@ namespace EmployeeManagement.Api.Controllers
         [Authorize]
         public IActionResult EditEmployee(EmployeeMaster employee)
         {
-            _employeeMasterRepository.Update(employee);
+            _employeeManager.EditEmployee(employee);
             var response = new Success
             {
                 Status = "Success",
@@ -66,7 +66,7 @@ namespace EmployeeManagement.Api.Controllers
         [Authorize]
         public IActionResult DeleteEmployee(EmployeeMaster employee)
         {
-            _employeeMasterRepository.Delete(employee);
+            _employeeManager.DeleteEmployee(employee);
             var response = new Success
             {
                 Status = "Success",
