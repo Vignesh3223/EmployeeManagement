@@ -1,4 +1,4 @@
-﻿using EmployeeManagement.Business;
+using EmployeeManagement.Business;
 using EmployeeManagement.Persistence.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -20,7 +20,7 @@ namespace EmployeeManagement.Api.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public IActionResult GetEmployees()
         {
             var response = _employeeManager.GetEmployees();
@@ -28,6 +28,7 @@ namespace EmployeeManagement.Api.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public IActionResult GetEmployeeById(int Id)
         {
             var response = _employeeManager.GetEmployeeById(Id);
@@ -35,7 +36,7 @@ namespace EmployeeManagement.Api.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public IActionResult CreateEmployee(EmployeeMaster employee)
         {
             _employeeManager.CreateEmployee(employee);
@@ -48,10 +49,14 @@ namespace EmployeeManagement.Api.Controllers
             return Ok(response);
         }
 
-        [HttpPut]
-        [Authorize]
-        public IActionResult EditEmployee(EmployeeMaster employee)
+        [HttpPut("{id}")]
+        [Authorize(Roles = "Employee")]
+        public IActionResult EditEmployee(int id,EmployeeMaster employee)
         {
+            if (id != employee.Id)
+            {
+                return BadRequest("Employee not found");
+            }
             _employeeManager.EditEmployee(employee);
             var response = new Success
             {
@@ -60,10 +65,10 @@ namespace EmployeeManagement.Api.Controllers
 
             };
             return Ok(response);
-        }
+         }
 
         [HttpDelete]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public IActionResult DeleteEmployee(EmployeeMaster employee)
         {
             _employeeManager.DeleteEmployee(employee);

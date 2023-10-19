@@ -1,4 +1,4 @@
-﻿using EmployeeManagement.Persistence.IRepository;
+using EmployeeManagement.Persistence.IRepository;
 using EmployeeManagement.Persistence.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+#nullable disable
 
 namespace EmployeeManagement.Persistence.Repository
 {
@@ -39,7 +41,7 @@ namespace EmployeeManagement.Persistence.Repository
 
         public void Update(T entity)
         {
-            _entities.Entry(entity).State = EntityState.Modified;
+            _entities.Update(entity);
             _context.SaveChanges();
         }
 

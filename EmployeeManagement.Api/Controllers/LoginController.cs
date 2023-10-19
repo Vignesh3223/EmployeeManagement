@@ -1,11 +1,14 @@
-﻿using EmployeeManagement.Persistence.Models;
+using EmployeeManagement.Persistence.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Principal;
 using System.Text;
+
+#nullable disable
 
 namespace EmployeeManagement.Api.Controllers
 {
@@ -38,7 +41,7 @@ namespace EmployeeManagement.Api.Controllers
                 IActionResult token = GetToken(employee);
                 if (token is OkObjectResult objectResult)
                 {
-                    string? jwtToken = objectResult.Value?.ToString();
+                    string jwtToken = objectResult.Value.ToString();
                     var response = new Persistence.Models.Response
                     {
                         Status = "Success",
@@ -81,22 +84,21 @@ namespace EmployeeManagement.Api.Controllers
 
             var key = "Yh2k7QSu4l8CZg5p6X3Pna9L0Miy4D3Bvt0JVr87UcOj69Kqw5R2Nmf4FWs05Dsa";
             var creds = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)), SecurityAlgorithms.HmacSha256);
-
-            var claims = new List<Claim>
+            var claims = new ClaimsIdentity(new Claim[]
             {
                 new Claim(ClaimTypes.Name, employee.Username),
                 new Claim(ClaimTypes.Role, userRole),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            });
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = claims,
+                Expires = DateTime.Now.AddDays(1),
+                SigningCredentials = creds
             };
 
-            var token = new JwtSecurityToken(
-                issuer: "JWTAuthenticationServer",
-                audience: "JWTServicePostmanClient",
-                claims: claims,
-                expires: DateTime.Now.AddDays(1),
-                signingCredentials: creds
-                );
-
+            var token = new JwtSecurityTokenHandler().CreateToken(tokenDescriptor);
             var jwtToken = new JwtSecurityTokenHandler().WriteToken(token);
             return Ok(jwtToken);
         }

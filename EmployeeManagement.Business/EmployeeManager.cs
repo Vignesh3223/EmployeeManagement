@@ -1,4 +1,4 @@
-﻿using EmployeeManagement.Persistence.IRepository;
+using EmployeeManagement.Persistence.IRepository;
 using EmployeeManagement.Persistence.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -26,12 +26,12 @@ namespace EmployeeManagement.Business
 
         public EmployeeMaster GetEmployeeById(int Id)
         {
-           return _employeeMasterRepository.GetById(Id);
+            return _employeeMasterRepository.GetById(Id);
         }
 
         public void CreateEmployee(EmployeeMaster employee)
         {
-           _employeeMasterRepository.Add(employee);
+            _employeeMasterRepository.Add(employee);
         }
 
         public void EditEmployee(EmployeeMaster employee)
@@ -41,7 +41,9 @@ namespace EmployeeManagement.Business
 
         public void DeleteEmployee(EmployeeMaster employee)
         {
+            employee.IsActive = false;
             _employeeMasterRepository.Delete(employee);
         }
     }
 }
+

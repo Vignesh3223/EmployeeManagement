@@ -21,14 +21,24 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 {
     options.TokenValidationParameters = new TokenValidationParameters
     {
-        ValidateIssuer = true,
-        ValidateAudience = true,
+        ValidateIssuer = false,
+        ValidateAudience = false,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
         ValidIssuer = "JWTAuthenticationServer",
         ValidAudience = "JWTServicePostmanClient",
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("Yh2k7QSu4l8CZg5p6X3Pna9L0Miy4D3Bvt0JVr87UcOj69Kqw5R2Nmf4FWs05Dsa"))
     };
+});
+builder.Services.AddCors(options =>
+{
+  options.AddPolicy(name: "AllowAccess",
+      builder =>
+      {
+        builder.WithOrigins("http://localhost:4200", "http://localhost:4200")
+                              .AllowAnyHeader()
+                              .AllowAnyMethod();
+      });
 });
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped(typeof(EmployeeManager));
@@ -42,10 +52,12 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseCors("AllowAccess");
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+
 
 app.MapControllers();
 
