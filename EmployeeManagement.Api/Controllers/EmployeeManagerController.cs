@@ -39,6 +39,7 @@ namespace EmployeeManagement.Api.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult CreateEmployee(EmployeeMaster employee)
         {
+            employee.CreatedDate = DateTime.Now;
             _employeeManager.CreateEmployee(employee);
             var response = new Success
             {

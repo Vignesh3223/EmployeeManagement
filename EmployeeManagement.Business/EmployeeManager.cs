@@ -26,7 +26,8 @@ namespace EmployeeManagement.Business
 
         public EmployeeMaster GetEmployeeById(int Id)
         {
-            return _employeeMasterRepository.GetById(Id);
+            var empMaster= _employeeMasterRepository.GetById(Id);
+            return empMaster;
         }
 
         public void CreateEmployee(EmployeeMaster employee)

@@ -42,6 +42,9 @@ builder.Services.AddCors(options =>
 });
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped(typeof(EmployeeManager));
+builder.Services.AddScoped(typeof(DepartmentManager));
+builder.Services.AddScoped(typeof(DesignationManager));
+builder.Services.AddScoped(typeof(SalaryManager));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
