@@ -67,11 +67,15 @@ namespace EmployeeManagement.Api.Controllers
             };
             return Ok(response);
          }
-
-        [HttpDelete]
+         
+        [HttpDelete("{id}")]
         [Authorize(Roles = "Admin")]
-        public IActionResult DeleteEmployee(EmployeeMaster employee)
+        public IActionResult DeleteEmployee(int id,EmployeeMaster employee)
         {
+            if (id != employee.Id)
+            {
+                return BadRequest("Employee not found");
+            }
             _employeeManager.DeleteEmployee(employee);
             var response = new Success
             {

@@ -42,7 +42,6 @@ namespace EmployeeManagement.Business
 
         public void DeleteEmployee(EmployeeMaster employee)
         {
-            employee.IsActive = false;
             _employeeMasterRepository.Delete(employee);
         }
     }

@@ -86,8 +86,9 @@ namespace EmployeeManagement.Api.Controllers
             var creds = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)), SecurityAlgorithms.HmacSha256);
             var claims = new ClaimsIdentity(new Claim[]
             {
+                new Claim(JwtRegisteredClaimNames.Sub,employee.Id.ToString()),
                 new Claim(ClaimTypes.Name, employee.Username),
-                new Claim(ClaimTypes.Role, userRole),
+                new Claim(ClaimTypes.Role, userRole),   
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             });
 
