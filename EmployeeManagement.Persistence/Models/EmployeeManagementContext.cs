@@ -75,9 +75,6 @@ public partial class EmployeeManagementContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false);
             entity.Property(e => e.HireDate).HasColumnType("date");
-            entity.Property(e => e.IsActive)
-                .IsRequired()
-                .HasDefaultValueSql("((1))");
             entity.Property(e => e.LastName)
                 .HasMaxLength(50)
                 .IsUnicode(false);

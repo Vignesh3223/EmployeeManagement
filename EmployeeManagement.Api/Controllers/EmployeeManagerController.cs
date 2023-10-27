@@ -4,7 +4,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.TagHelpers;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+
+#nullable disable
 
 namespace EmployeeManagement.Api.Controllers
 {
@@ -14,9 +17,12 @@ namespace EmployeeManagement.Api.Controllers
     {
         private readonly EmployeeManager _employeeManager;
 
-        public EmployeeManagerController(EmployeeManager employeeManager)
+        private readonly EmployeeManagementContext _context;
+
+        public EmployeeManagerController(EmployeeManager employeeManager, EmployeeManagementContext context)
         {
             _employeeManager = employeeManager;
+            _context = context;
         }
 
         [HttpGet]
@@ -82,6 +88,32 @@ namespace EmployeeManagement.Api.Controllers
                 Status = "Success",
                 Message = "Employee Deleted"
 
+            };
+            return Ok(response);
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateStatus(int id, string activity)
+        {
+            var employee = _context.EmployeeMasters.FirstOrDefault(x => x.Id == id);
+            if (activity == "online")
+            {
+                employee.IsActive = true;
+            }
+            else if(activity == "offline")
+            {
+                employee.IsActive = false;
+            }
+            else if (activity == "away")
+            {
+                employee.IsActive = null;
+            }
+            _context.Entry(employee).State = EntityState.Modified;
+            _context.SaveChanges();
+            var response = new Success
+            {
+                Status = "Success",
+                Message = "Status Updated"
             };
             return Ok(response);
         }
